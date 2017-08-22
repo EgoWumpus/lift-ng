@@ -380,7 +380,11 @@ object Angular extends DispatchSnippet with AngularProperties with LiftNgJsHelpe
       functions.values.foldLeft(Set.newBuilder[String])(_ ++= _.moduleDependencies).result()
 
     @transient
-    private val promiseMapper = DefaultApiSuccessMapper
+    private var promiseMapper = DefaultApiSuccessMapper
+
+    private def readObject(in: java.io.ObjectInputStream): Unit = {
+      promiseMapper = DefaultApiSuccessMapper
+    }
 
     /**
      * Registers a no-arg javascript function in this service's javascript object that returns a \$q promise.
