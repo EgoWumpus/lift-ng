@@ -21,7 +21,7 @@ version := "0.10.2"
 
 val liftVersion = SettingKey[String]("liftVersion", "Full version number of the Lift Web Framework")
 val liftEdition = SettingKey[String]("liftEdition", "Lift Edition (short version number to append to artifact name)")
-liftVersion := (liftVersion ?? "3.1.0").value
+liftVersion := (liftVersion ?? "3.2.0-M2").value
 liftEdition := liftVersion.value.substring(0,3)
 
 name := name.value + "_" + liftEdition.value
@@ -30,7 +30,7 @@ name := name.value + "_" + liftEdition.value
 // E.g. "2.5" gets converted to "2-5"
 moduleName := name.value
 
-crossScalaVersions := Seq("2.11.11", "2.10.6")
+crossScalaVersions := Seq("2.12.3", "2.11.11", "2.10.6")
 
 scalaVersion := crossScalaVersions.value.head
 
@@ -41,13 +41,17 @@ resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositori
 libraryDependencies := {
   // Ideally, keep this in sync with https://github.com/lift/framework/blob/master/project/Dependencies.scala#L32
   val scalaz6 = "org.scalaz" %% "scalaz-core" % "6.0.4" % "compile"
-  val scalaz7 = "org.scalaz" %% "scalaz-core" % "7.0.6" % "compile"
+  val scalaz7 = "org.scalaz" %% "scalaz-core" % "7.2.7" % "compile"
   val scalaTest1 = "org.scalatest" %% "scalatest" % "1.9.2" % "test"
   val scalaTest2 = "org.scalatest" %% "scalatest" % "2.2.1" % "test"
+  val scalaTest3 = "org.scalatest" %% "scalatest" % "3.0.1" % "test"
   Seq(
     "net.liftweb"   %% "lift-webkit"  % liftVersion.value % "provided",
-    "com.joescii"   %  "j2js-i18n"    % "0.1.1" % "compile"
-  ) ++ (if(scalaVersion.value.startsWith("2.9")) Seq(scalaz6, scalaTest1) else Seq(scalaz7, scalaTest2))
+    "com.joescii"   %  "j2js-i18n"    % "0.1.1" % "compile",
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6"
+  ) ++ (if(scalaVersion.value.startsWith("2.9")) Seq(scalaz6, scalaTest1) else Seq(scalaz7, scalaTest3))
+  // TODO nford swap above with a case stmt to handle 2.9/(2.10, 2.11)/2.12
+  // TODO nford re: scala-parser-combinators May need to be only in later version
 }
 
 scalacOptions := {
